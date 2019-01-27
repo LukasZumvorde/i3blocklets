@@ -8,7 +8,7 @@ It assumes you to have 4 CPUs.
 
 ```
 [cpu_usage]
-command=~/.i3/i3blocks/cpu_usage
+command=$SCRIPT_DIR/cpu_usage
 interval=10
 label=CPU
 ```
@@ -19,8 +19,7 @@ Returns the currently played filename or "none" if nothing is playing. Adds mous
 
 ```
 [music]
-command=~/.i3/i3blocks/music
+command=$SCRIPT_DIR/music
 interval=10
 label=♫
-color=#cc33ff
 ```
