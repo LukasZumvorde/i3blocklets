@@ -1,0 +1,34 @@
+#!/bin/bash
+
+
+if [[ $BLOCK_BUTTON ]]; then
+	# Check if server is already running
+	running=$(ps -e | grep mocp | wc -l)
+	if ! [  $running ]; then
+		mocp --server 
+	fi
+
+	# react to mouse buttons
+	if [ "$BLOCK_BUTTON" -eq "1" ]; then 
+		mocp --next 
+	fi
+	if [ "$BLOCK_BUTTON" -eq "3" ]; then
+		mocp --previous
+	fi
+	if [ "$BLOCK_BUTTON" -eq "2" ]; then
+		mocp --toggle-pause
+	fi
+	sleep 0.5
+fi
+
+FILENAME=$(mocp --format "%file")
+if [ echo $FILENAME | grep FATAL_ERROR ]; then
+	FILENAME=$(basename "$FILENAME")
+	FILENAME=${FILENAME%.*}
+else
+	FILENAME="none"
+fi
+echo $FILENAME
+echo $FILENAME
+echo "#cc99ff"
+
