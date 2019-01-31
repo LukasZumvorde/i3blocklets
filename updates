@@ -23,15 +23,18 @@
 PMupdates=$(checkupdates | wc -l)
 AURupdates=$(yaourt -Qua | wc -l)
 
-echo $PMupdates "/" $AURupdates
-echo $PMupdates "/" $AURupdates
-
 if [ "$((PMupdates+AURupdates))" -gt "0" ]; then
-	echo "#FF0000"
 	if [[ "$BLOCK_BUTTON" -eq "1"  ]]; then
 		terminal -e "yay -Syu"
-	fi
+		PMupdates=$(checkupdates | wc -l)
+		AURupdates=$(yaourt -Qua | wc -l)
+  fi
+	echo $PMupdates "/" $AURupdates
+  echo $PMupdates "/" $AURupdates
+	echo "#FF0000"
 else
+  echo $PMupdates "/" $AURupdates
+  echo $PMupdates "/" $AURupdates
   echo "#00FF00"
 fi
 
