@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Copyright (c) 2019 Lukas Zumvorde
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
@@ -20,23 +20,33 @@
 # DEALINGS IN THE SOFTWARE. 
 
 
-PMupdates=$(checkupdates | wc -l)
-AURupdates=$(yaourt -Qua | wc -l)
 
-if [ "$((PMupdates+AURupdates))" -gt "0" ]; then
-	if [[ "$BLOCK_BUTTON" -eq "1"  ]]; then
-		terminal -e "yay -Syu"
-		PMupdates=$(checkupdates | wc -l)
-		AURupdates=$(yaourt -Qua | wc -l)
-  fi
-	echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-	echo "#DD2222"
+batterystatus=$(acpi -b)
+charge=$( echo -e "$batterystatus" | awk '{ gsub("%,*","",$4) } { print $4 }' )
+loading=$( echo -e "$batterystatus" | awk '{ if($3=="Charging,"||$3=="Unknown,"){print "1"}else{print "0"} }' )
+if [ $loading = "1" ]; then
+	icon=""
+	color="#22DD22"
 else
-  echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-  echo "#22DD22"
+	if [ $charge -ge 88 ]; then
+		icon=""
+		color="#22DD22"
+  elif [ $charge -ge 63 ]; then
+		icon=""
+		color="#99DD22"
+  elif [ $charge -ge 38 ]; then
+		icon=""
+		color="#DDDD22"
+  elif [ $charge -ge 13 ]; then
+		icon=""
+		color="#DD9922"
+	else
+		icon=""
+		color="#DD2222"
+	fi
 fi
 
-
+echo -e "$icon$charge%"
+echo -e "$icon$charge%"
+echo -e "$color"
 

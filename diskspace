@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Copyright (c) 2019 Lukas Zumvorde
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,24 +19,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE. 
 
+df -lh --output="used,size,pcent" / | sed '1d' | awk '{print $1 "/" $2 " (" $3 ")"}'
 
-PMupdates=$(checkupdates | wc -l)
-AURupdates=$(yaourt -Qua | wc -l)
-
-if [ "$((PMupdates+AURupdates))" -gt "0" ]; then
-	if [[ "$BLOCK_BUTTON" -eq "1"  ]]; then
-		terminal -e "yay -Syu"
-		PMupdates=$(checkupdates | wc -l)
-		AURupdates=$(yaourt -Qua | wc -l)
-  fi
-	echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-	echo "#DD2222"
-else
-  echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-  echo "#22DD22"
+if [[ "$BLOCK_BUTTON" -eq "1" ]]; then
+	pcmanfm
 fi
-
 
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Copyright (c) 2019 Lukas Zumvorde
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
@@ -19,24 +19,30 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
 # DEALINGS IN THE SOFTWARE. 
 
+channels="sovietwomble\ncyanideplaysgames\nbattsgo\nivanthecrazy42\nvulkis"
 
-PMupdates=$(checkupdates | wc -l)
-AURupdates=$(yaourt -Qua | wc -l)
+choices=$(echo -e "$channels" | awk '{ printf "%s\t" , $1 ; system("curl -s -H \x27Client-ID: ctf0u38gzxl1emqdrsp17y0e20o1ajh\x27 -X GET \x27https://api.twitch.tv/helix/streams?user_login=" $1 "\x27 | jq \x27.data | .[0] | .title\x27") }' | grep -v -P "\tnull$") 
 
-if [ "$((PMupdates+AURupdates))" -gt "0" ]; then
-	if [[ "$BLOCK_BUTTON" -eq "1"  ]]; then
-		terminal -e "yay -Syu"
-		PMupdates=$(checkupdates | wc -l)
-		AURupdates=$(yaourt -Qua | wc -l)
-  fi
-	echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-	echo "#DD2222"
+if [[ -z "$choices" ]]; then
+	numstreams="0" 
+	echo $numstreams
 else
-  echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-  echo "#22DD22"
+	numstreams=$(echo -e "$choices" | wc -l)
+	echo $numstreams
 fi
+
+if [[ "$BLOCK_BUTTON" -eq "1" ]]; then
+	choice=$(echo -e "$choices" | dmenu -i -l 5 -p "Channel Name")
+	channelname=$(echo -e "$choice" | awk -F "\t" '{print $1}')
+	if [[ -z "$channelname" ]]; then
+		mpv "https://www.twitch.tv/"$channelname
+	fi
+fi
+
+# curl -s -H 'Client-ID: ctf0u38gzxl1emqdrsp17y0e20o1ajh' -X GET 'https://api.twitch.tv/helix/streams?user_login=cyanideplaysgames' | jq '.data | .[0] | .title'
+# curl -s -H 'Client-ID: ctf0u38gzxl1emqdrsp17y0e20o1ajh' -X GET 'https://api.twitch.tv/helix/streams?user_login=cyanideplaysgames' | jq '.data | .[0] | .user_name'
+
+
 
 
 

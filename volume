@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 # Copyright (c) 2019 Lukas Zumvorde
 #
 # Permission is hereby granted, free of charge, to any person obtaining a 
@@ -20,23 +20,30 @@
 # DEALINGS IN THE SOFTWARE. 
 
 
-PMupdates=$(checkupdates | wc -l)
-AURupdates=$(yaourt -Qua | wc -l)
-
-if [ "$((PMupdates+AURupdates))" -gt "0" ]; then
-	if [[ "$BLOCK_BUTTON" -eq "1"  ]]; then
-		terminal -e "yay -Syu"
-		PMupdates=$(checkupdates | wc -l)
-		AURupdates=$(yaourt -Qua | wc -l)
-  fi
-	echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-	echo "#DD2222"
-else
-  echo $PMupdates "/" $AURupdates
-  echo $PMupdates "/" $AURupdates
-  echo "#22DD22"
+if [[ "$BLOCK_BUTTON" -eq "1" ]]; then
+	pulseaudio-ctl mute
 fi
 
+if [[ "$BLOCK_BUTTON" -eq "3" ]]; then
+	pavucontrol
+fi
 
+if [[ "$BLOCK_BUTTON" -eq "4" ]]; then
+	pulseaudio-ctl up 5
+fi
 
+if [[ "$BLOCK_BUTTON" -eq "5" ]]; then
+	pulseaudio-ctl down 5
+fi
+
+status=$(pulseaudio-ctl full-status)
+volume=$(echo -e "$status" | awk '{print $1}')
+mutestate=$(echo -e "$status" | awk '{print $2}')
+
+if [ "$mutestate" = "yes" ]; then
+	volumeicon=""
+else
+	volumeicon=""
+fi
+
+echo $volumeicon""$volume"%"
